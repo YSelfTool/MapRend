@@ -74,7 +74,7 @@ public class Program {
 			System.out.println(" The ressource folder must contain a colors.json and a biomes.json");
 			System.out.println("or");
 			System.out.println(" textures ressource");
-			System.out.println(" -> Generated colors.json");
+			System.out.println(" -> Generates colors.json");
 			System.out.println(" -> ressource is the ressource folder, default is . (e.g. ./ressource)");
 			System.out.println(" The ressource folder must contain a textures.json and a raw folder containing all files from assets/minecraft/textures/blocks/ of a ressource pack.");
 				
