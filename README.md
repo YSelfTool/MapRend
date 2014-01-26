@@ -1,6 +1,7 @@
 ## MapRend
 MapRend is a tool to render top down maps of Minecraft worlds saved in the MCAnvil format. 
 To render a world some files are required:
+
 * colors.json
   
   Contains which color a block has, if it is visible and if it is modified by the biome green.
