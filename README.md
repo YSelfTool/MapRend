@@ -1,5 +1,8 @@
 ## MapRend
-MapRend is a tool to render top down maps of Minecraft worlds saved in the MCAnvil format. 
+MapRend is a tool to render top down maps of Minecraft worlds saved in the MCAnvil format.
+
+![Example, rendered by MapRend](http://maps.unitedminecraft.de/zonemap/cluster/Arandur-day_0,-1.png)
+ 
 To render a world some files are required:
 
 * colors.json
