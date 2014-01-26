@@ -15,6 +15,7 @@ public class Program {
 	static String worldName = "";
 	static String outputFolder = "";
 	static String clusterFolder = "";
+	static String jsonOutputFolder = "";
 	public static boolean renderNight = false;
 	public static int chunkRadius = 100;
 	public static boolean drawRect = false;
@@ -29,14 +30,54 @@ public class Program {
 	public static void main(String[] args) throws IOException {
 		if(args.length >= 1) {
 			if(args[0].equals("map")) {
+				long startTime = System.nanoTime();
 				generateMap(args);
+				long endTime = System.nanoTime();
+				long duration = endTime - startTime;
+				long nanoseconds = duration % 1000; duration /= 1000;
+				long mikroseconds = duration % 1000; duration /= 1000;
+				long milliseconds = duration % 1000; duration /= 1000;
+				long seconds = duration % 60; duration /= 60;
+				long minutes = duration % 60; duration /= 60;
+				long hours = duration % 24; duration /= 24;
+				long days = duration;
+				
+				System.out.println("Needed " + 
+					(days > 0 ? days + "d" : "") + 
+					(hours > 0 ? hours + "h" : "") + 
+					(minutes > 0 ? minutes + "m" : "") + 
+					(seconds > 0 ? seconds + "s" : "") + 
+					(milliseconds > 0 ? milliseconds + "" : ""));/* + 
+					(mikroseconds > 0 ? mikroseconds + "u" : "") + 
+					(nanoseconds > 0 ? nanoseconds + "n" : ""));*/
+					
 			} else if(args[0].equals("textures")) {
 				generateTextures(args);
 			} else {
 				exitWithError("Arguments are invalid: " + args[0]);
 			}
 		} else {
-			exitWithError("Missing Arguments!");
+			System.out.println("Missing Arguments! Expected form: ");
+			System.out.println("either");
+			System.out.println(" map world [ressource [output [day/night [radius [circle/rect [cluster [clusterpath [jsonoutput]]]]]]]]");
+			System.out.println(" -> Renders a map of the world");
+			System.out.println(" -> world is the world folder (e.g. .minecraft/worlds/Amar)");
+			System.out.println(" -> ressource is the ressource folder, default is . (e.g. ./ressource)");
+			System.out.println(" -> output is the output folder, default is . (e.g. /var/www/maps/)");
+			System.out.println(" -> day/night modifies the daytime, default is day (e.g. day)");
+			System.out.println(" -> radius is the radius of the drawn circle or rectangle in chunks, default is 150 (e.g. 157)");
+			System.out.println(" -> circle/rect modifies the shape of the rendered map, default is circle (e.g. circle)");
+			System.out.println(" -> cluster lets the program save images of clusters of chunks, default is off (e.g. cluster)");
+			System.out.println(" -> clusterpath is the folder where the cluster images will be saved, default is output (e.g. /var/www/maps/cluster/)");
+			System.out.println(" -> jsonoutput is the folder where a JSON file containing data is saved, default is clusterpath or, if that's not set, output (e.g. /var/www/maps/json/)");
+			System.out.println(" The world folder must contain an minecraft anvil world");
+			System.out.println(" The ressource folder must contain a colors.json and a biomes.json");
+			System.out.println("or");
+			System.out.println(" textures ressource");
+			System.out.println(" -> Generated colors.json");
+			System.out.println(" -> ressource is the ressource folder, default is . (e.g. ./ressource)");
+			System.out.println(" The ressource folder must contain a textures.json and a raw folder containing all files from assets/minecraft/textures/blocks/ of a ressource pack.");
+				
 		}
 	}
 	
@@ -217,8 +258,14 @@ public class Program {
 									renderCluster = (args[7].equals("cluster"));
 									if(args.length >= 9) {
 										clusterFolder = args[8];
+										if(args.length >= 10) {
+											jsonOutputFolder = args[9];
+										} else {
+											jsonOutputFolder = clusterFolder;
+										}
 									} else {
 										clusterFolder = outputFolder;
+										jsonOutputFolder = outputFolder;
 									}
 								}
 							}
@@ -236,7 +283,7 @@ public class Program {
 		
         File dir = new File(worldFolder);
         if (!dir.exists()) {
-        	exitWithError("World does not exist!");
+        	exitWithError("World does not exist: " + dir.getCanonicalPath());
         }
         
         Level level = new Level(worldFolder);
@@ -283,7 +330,7 @@ public class Program {
         }
         saveImage(image);
         try {
-        	File outputfile = new File(outputFolder, "coordinates-" + worldName + "-" + (renderNight ? "night" : "day") + ".json");
+        	File outputfile = new File(jsonOutputFolder, "coordinates-" + worldName + "-" + (renderNight ? "night" : "day") + ".json");
 			FileWriter writer = new FileWriter(outputfile);
 			coordinatesJSON.write(writer);
 			writer.flush();
@@ -360,6 +407,7 @@ public class Program {
 	public static void saveClusterImage(BufferedImage image, int x, int z) {
 	    try {
 	    	File outputfile = new File(clusterFolder, worldName + "-" + (renderNight ? "night" : "day") + "_" + x + "," + z + ".png");
+	    	if(image == null) System.out.println("Image null!");
 			ImageIO.write(image, "png", outputfile);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -393,6 +441,7 @@ public class Program {
 	static void printCurrentFolder() throws IOException {
 		String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current directory is: " + current);
+        System.out.println("World directory is: " + worldFolder);
 	}
 	
 	static void printRenderOptions() {

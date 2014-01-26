@@ -3,12 +3,12 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="D:/Users/Robin/Git/gitmc/maprend/MapRend.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="../MapRend.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="de.unitedminecraft.Program"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="D:/Users/Robin/Git/gitmc/maprend/MapRend/bin"/>
+            <fileset dir="bin"/>
         </jar>
     </target>
 </project>
