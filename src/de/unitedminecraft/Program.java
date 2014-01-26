@@ -33,10 +33,11 @@ public class Program {
 			} else if(args[0].equals("textures")) {
 				generateTextures(args);
 			} else {
-				exitWithError("Arguments are invalid!");
+				exitWithError("Arguments are invalid: " + args[0]);
 			}
+		} else {
+			exitWithError("Missing Arguments!");
 		}
-		
 	}
 	
 	public static void generateTextures(String[] args) {
