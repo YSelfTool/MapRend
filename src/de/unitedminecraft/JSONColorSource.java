@@ -10,6 +10,7 @@ public class JSONColorSource implements ColorSource {
 	
 	int[][] colors;
 	boolean[][] green;
+	ColorF[] biomColors;
 	
 	public JSONColorSource(String ressourceFolder) {
 		JSONObject colorsJSON = null;
@@ -48,6 +49,32 @@ public class JSONColorSource implements ColorSource {
 				green[cur.getInt("i")][cur.getInt("m")] = (cur.getInt("g") == 1);
 			}
 		}
+		JSONObject biomesJSON = null;
+		try {
+			File jsonFile = new File(ressourceFolder, "biomes.json");
+			FileInputStream jsonFis;
+			jsonFis = new FileInputStream(jsonFile);
+			byte[] data = new byte[(int)jsonFile.length()];
+		    jsonFis.read(data);
+		    jsonFis.close();
+		    String source = new String(data, "UTF-8");
+			biomesJSON = new JSONObject(source);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Program.exitWithError("Cannot open biomes.json!");
+		}
+		JSONArray biomesArr = biomesJSON.getJSONArray("biomes");
+		int maxBiomID = 0; 
+		for(int i = 0; i < biomesArr.length(); i++) {
+			JSONObject cur = biomesArr.getJSONObject(i);
+			if(cur.getInt("id") > maxBiomID) maxBiomID = cur.getInt("id");
+		}
+		biomColors = new ColorF[maxBiomID+1];
+		for(int i = 0; i < biomesArr.length(); i++) {
+			JSONObject cur = biomesArr.getJSONObject(i);
+			biomColors[cur.getInt("id")] = new ColorF(1.0f, (float)cur.getDouble("r"), (float)cur.getDouble("g"), (float)cur.getDouble("b"));
+		}
 	}
 	
 	@Override
@@ -80,9 +107,6 @@ public class JSONColorSource implements ColorSource {
 	}
 	
 	private int getBlockColor(int id, int meta) {
-		if(id < 0) {
-			id = id;
-		}
 		return colors[id][meta];
 	}
 	
@@ -112,6 +136,8 @@ public class JSONColorSource implements ColorSource {
 	
 	private ColorF biomeCoef(int biome) {
 		
+		return biomColors[biome];
+		/*
 		switch(biome) {
 		case 0:
 			return new ColorF(1.0f, 0.25f, 1.0f, 0.25f);
@@ -238,7 +264,7 @@ public class JSONColorSource implements ColorSource {
 			
 		}
 		
-		return new ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+		return new ColorF(1.0f, 1.0f, 1.0f, 1.0f);*/
 	}
 	
 }
