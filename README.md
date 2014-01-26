@@ -11,11 +11,13 @@ To render a world some files are required:
   
   Contains the modifiers for leaves, grass, etc. per biome.
 
-### Textures
+#### Textures
 MapRend can create a set of used colors from a ressource pack. This is done by using the argument textures. It needs the file textures.json, which contains the texture name for all blocks, if they are visible and if the the biome green affects them.  
    
 MapRend is written in Java.
 
-MapRend uses Code by MojangAB for reading NBT files. (mojang.com)
+#### Reference
+
+MapRend uses Code by MojangAB for reading NBT files. (https://mojang.com)
 MapRend uses Code by Douglas Crockford for reading and writing JSON files. (https://github.com/douglascrockford) 
  
