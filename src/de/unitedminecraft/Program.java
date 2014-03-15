@@ -305,6 +305,8 @@ public class Program {
         BufferedImage image = createImage();
         ColorSource colorSource = new JSONColorSource(ressourceFolder);
         
+        int minClusterX = 0, maxClusterX = 0, minClusterZ = 0, maxClusterZ = 0;
+        
         File regionDir = new File(worldFolder, "region");
         for(File regionFile : regionDir.listFiles()) {
         	ClusterChunk[][] clusterImages = null;
@@ -322,13 +324,24 @@ public class Program {
             	for(int x = 0; x < 32 / clusterSize; x++) {
             		for(int z = 0; z < 32 / clusterSize; z++) {
             			ClusterChunk c = clusterImages[x][z];
-            			if(c != null)
+            			if(c != null) {
+            				if(c.getX() < minClusterX) minClusterX = c.getX();
+            				if(c.getX() > maxClusterX) maxClusterX = c.getX();
+            				if(c.getZ() < minClusterZ) minClusterZ = c.getZ();
+            				if(c.getZ() > maxClusterZ) maxClusterZ = c.getZ();
             				saveClusterImage(c.getImage(), c.getX(), c.getZ());
+            			}
             		}
             	}
             }
         }
         saveImage(image);
+        JSONObject borderObject = new JSONObject();
+        borderObject.put("minX", minClusterX);
+        borderObject.put("maxX", maxClusterX);
+        borderObject.put("minZ", minClusterZ);
+        borderObject.put("maxZ", maxClusterZ);
+        coordinatesJSON.put("border", borderObject);
         try {
         	File outputfile = new File(jsonOutputFolder, "coordinates-" + worldName + "-" + (renderNight ? "night" : "day") + ".json");
 			FileWriter writer = new FileWriter(outputfile);
