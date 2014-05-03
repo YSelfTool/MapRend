@@ -1,0 +1,24 @@
+<project default="build">
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+
+    <target name="build" depends="jar">
+	<copy file="bin/jar/MapRend.jar" todir="."/>
+    </target>
+    
+    <target name="compile">
+        <mkdir dir="bin/classes"/>
+        <javac srcdir="src" destdir="bin/classes"/>
+    </target>
+    
+    <target name="jar" depends="compile">
+        <mkdir dir="bin/jar"/>
+        <jar destfile="bin/jar/MapRend.jar" basedir="bin/classes">
+            <manifest>
+                <attribute name="Main-Class" value="de.unitedminecraft.Program"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>
