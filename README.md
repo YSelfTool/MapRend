@@ -19,9 +19,9 @@ To render a world some files are required:
 MapRend can create a set of used colors from a ressource pack. This is done by using the argument textures. It needs the file textures.json, which contains the texture name for all blocks, if they are visible and if the the biome green affects them.  
    
 #### Compiling
-MapRend is written in Java. The repository contains an Ant build file, to compile it use:
+MapRend is written in Java. The repository contains an Ant build file (build.xml), to compile it use:
 
-    ant -buildfile pom.xml
+    ant
 
 #### Reference
 
