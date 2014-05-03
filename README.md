@@ -20,6 +20,7 @@ MapRend can create a set of used colors from a ressource pack. This is done by u
    
 #### Compiling
 MapRend is written in Java. The repository contains an Ant build file, to compile it use:
+
     ant -buildfile pom.xml
 
 #### Reference
