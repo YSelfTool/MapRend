@@ -10,12 +10,12 @@ import org.json.*;
 public class Program {
 	
 	// render options
-	static String worldFolder = "";
-	static String ressourceFolder = "";
+	static String worldFolder = ".";
+	static String ressourceFolder = ".";
 	static String worldName = "";
-	static String outputFolder = "";
-	static String clusterFolder = "";
-	static String jsonOutputFolder = "";
+	static String outputFolder = ".";
+	static String clusterFolder = ".";
+	static String jsonOutputFolder = ".";
 	public static boolean renderNight = false;
 	public static int chunkRadius = 100;
 	public static boolean drawRect = false;
@@ -243,10 +243,13 @@ public class Program {
 	public static void generateMap(String[] args) throws IOException {
 		if(args.length >= 2) {
 			worldFolder = args[1];
+			
 			if(args.length >= 3) {
 				ressourceFolder = args[2];
 				if(args.length >= 4) {
 					outputFolder = args[3];
+					clusterFolder = outputFolder;
+					jsonOutputFolder = outputFolder;
 					if(args.length >= 5) {
 						if(args[4].equals("night"))
 							renderNight = true;
@@ -258,14 +261,10 @@ public class Program {
 									renderCluster = (args[7].equals("cluster"));
 									if(args.length >= 9) {
 										clusterFolder = args[8];
+										jsonOutputFolder = clusterFolder;
 										if(args.length >= 10) {
 											jsonOutputFolder = args[9];
-										} else {
-											jsonOutputFolder = clusterFolder;
 										}
-									} else {
-										clusterFolder = outputFolder;
-										jsonOutputFolder = outputFolder;
 									}
 								}
 							}

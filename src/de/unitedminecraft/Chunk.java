@@ -1,7 +1,5 @@
 package de.unitedminecraft;
 
-import java.io.*;
-
 import com.mojang.nbt.*;
 
 public class Chunk {
