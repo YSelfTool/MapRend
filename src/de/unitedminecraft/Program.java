@@ -1,6 +1,8 @@
 package de.unitedminecraft;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -27,6 +29,10 @@ public class Program {
 	public static int chunkSize = 16;
 	public static int regionSize = 32;
 	
+	public static Map<String, Long> clusterLastEdited = new HashMap<String, Long>();
+	public static int regionsUpdated = 0;
+	public static int regionsAmount = 0;
+	
 	public static void main(String[] args) throws IOException {
 		if(args.length >= 1) {
 			if(args[0].equals("map")) {
@@ -51,6 +57,7 @@ public class Program {
 					(mikroseconds > 0 ? mikroseconds + "u" : "") + 
 					(nanoseconds > 0 ? nanoseconds + "n" : ""));*/
 					
+				if (renderCluster) System.out.println("Updated " + regionsUpdated + " of " + regionsAmount + " regions!");
 			} else if(args[0].equals("textures")) {
 				generateTextures(args);
 			} else {
@@ -240,6 +247,56 @@ public class Program {
 		}
 	}
 	
+	private static void readLastEdited() {
+		JSONObject editedJSON = null;
+		
+		try {
+			File jsonFile = new File(jsonOutputFolder, "updates.json");
+			if (!jsonFile.exists()) return;
+			
+			FileInputStream fileInputStream = new FileInputStream(jsonFile);
+			byte[] data = new byte[(int)jsonFile.length()];
+			fileInputStream.read(data);
+			fileInputStream.close();
+		    String source = new String(data, "UTF-8");
+		    
+		    editedJSON = new JSONObject(source);
+			
+		    for (Object key : editedJSON.keySet()) {
+		    	String regionName = (String) key;
+		    	
+				clusterLastEdited.put(regionName, editedJSON.getLong(regionName));
+			}
+		    
+		    System.out.println("Succesfully read updates.json file with " + clusterLastEdited.size() + " elements!");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			Program.exitWithError("Cannot read updates.json");
+		}
+	}
+	
+	private static void writeLastEdited() {
+		JSONObject editedJSON = new JSONObject();
+
+		for (String regionName : clusterLastEdited.keySet()) {
+			editedJSON.put(regionName, clusterLastEdited.get(regionName));
+		}
+	    
+		try {
+			File outputFile = new File(jsonOutputFolder, "updates.json");
+			FileWriter writer = new FileWriter(outputFile);
+			editedJSON.write(writer);
+			
+			writer.flush();
+			writer.close();
+			
+			System.out.println("Saved updates.json file (" + clusterLastEdited.size() + " elements) !");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			exitWithError("Error writing updates.json file!");
+		}
+	}
+	
 	public static void generateMap(String[] args) throws IOException {
 		if(args.length >= 2) {
 			worldFolder = args[1];
@@ -299,7 +356,11 @@ public class Program {
         spawnJSON.put("x", spawnX);
         spawnJSON.put("z", spawnZ);
         coordinatesJSON.put("spawn", spawnJSON);
-        if(renderCluster) coordinatesJSON.put("clusterSize", clusterSize);
+        
+        if(renderCluster) {
+        	coordinatesJSON.put("clusterSize", clusterSize);
+        	readLastEdited();
+        }
         
         BufferedImage image = createImage();
         ColorSource colorSource = new JSONColorSource(ressourceFolder);
@@ -307,7 +368,17 @@ public class Program {
         int minClusterX = 0, maxClusterX = 0, minClusterZ = 0, maxClusterZ = 0;
         
         File regionDir = new File(worldFolder, "region");
+        regionsAmount = regionDir.listFiles().length;
+        
         for(File regionFile : regionDir.listFiles()) {
+        	Region region = loadRegion(regionFile);
+        	
+        	Long lastEdited = clusterLastEdited.get(regionFile.getName());
+        	if (lastEdited != null && lastEdited == region.regionFile.lastModified()) continue;
+        	
+        	clusterLastEdited.put(regionFile.getName(), region.regionFile.lastModified());
+        	regionsUpdated++;
+        	
         	ClusterChunk[][] clusterImages = null;
         	if(renderCluster) {
 	        	clusterImages = new ClusterChunk[32 / clusterSize][32 / clusterSize];
@@ -317,9 +388,10 @@ public class Program {
 	        		}
 	        	}
         	}
-        	Region region = loadRegion(regionFile);
-            renderRegion(region, image, colorSource, clusterImages);
-            if(renderCluster) {
+        		
+        	renderRegion(region, image, colorSource, clusterImages);
+        	
+        	if(renderCluster) {
             	for(int x = 0; x < 32 / clusterSize; x++) {
             		for(int z = 0; z < 32 / clusterSize; z++) {
             			ClusterChunk c = clusterImages[x][z];
@@ -334,6 +406,9 @@ public class Program {
             	}
             }
         }
+        
+        writeLastEdited();
+        
         saveImage(image);
         JSONObject borderObject = new JSONObject();
         borderObject.put("minX", minClusterX);
