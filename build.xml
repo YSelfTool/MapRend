@@ -16,7 +16,7 @@
         <mkdir dir="bin/jar"/>
         <jar destfile="bin/jar/MapRend.jar" basedir="bin/classes">
             <manifest>
-                <attribute name="Main-Class" value="de.unitedminecraft.Program"/>
+                <attribute name="Main-Class" value="de.tooldev.Program"/>
             </manifest>
         </jar>
     </target>
