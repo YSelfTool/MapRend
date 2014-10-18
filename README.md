@@ -2,7 +2,7 @@
 MapRend is a tool to render top down maps of Minecraft worlds saved in the MCAnvil format.
 It can use all ressource packs, render day and night maps, shows biomes, height, height under oceans and is easy to update and customize! 
 
-![Example, rendered by MapRend](http://maps.unitedminecraft.de/zonemap/cluster/Arandur-day_0,-1.png)
+![Example, rendered by MapRend](http://tooldev.de/downloads/Arandur-day.png)
  
 To render a world some files are required:
 
