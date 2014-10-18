@@ -1,4 +1,4 @@
-package de.unitedminecraft;
+package de.tooldev;
 
 public class Color {
 	public int a, r, g, b;

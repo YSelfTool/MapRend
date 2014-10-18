@@ -5,7 +5,7 @@
     <target name="create_run_jar">
         <jar destfile="../MapRend.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="de.unitedminecraft.Program"/>
+                <attribute name="Main-Class" value="de.tooldev.Program"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="bin"/>
