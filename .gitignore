@@ -1,1 +1,5 @@
 *.class
+*.swp
+bin/
+ressource/
+MapRend.jar
