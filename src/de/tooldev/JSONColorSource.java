@@ -135,7 +135,14 @@ public class JSONColorSource implements ColorSource {
 	}
 	
 	private ColorF biomeCoef(int biome) {
-		return biomColors[biome];
+        ColorF color;
+        try {
+            color = biomColors[biome];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid biome: " + biome + ", using default.");
+            color = biomColors[1];
+        }
+        return color;
 	}
 	
 }

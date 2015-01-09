@@ -2,4 +2,6 @@
 *.swp
 bin/
 ressource/
+another/
+default/
 tmp/
