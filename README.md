@@ -23,6 +23,56 @@ MapRend is written in Java. The repository contains an Ant build file (build.xml
 
     ant
 
+#### Installation and Usage - Windows
+
+See [issue #1](https://github.com/YSelfTool/MapRend/issues/1) for an explanation.
+
+#### Installation and Usage - Mac OSX
+
+Clone the repository using `git` and cd into it using Terminal (don't copy the `$`, it's just there to show you the default prompt):
+
+```sh-session
+$ git clone https://github.com/YSelfTool/MapRend.git
+$ cd MapRend
+```
+
+Install `ant` (using [Homebrew](http://brew.sh/) it's just `brew install ant`) and run it:
+
+```sh-session
+$ brew install ant
+$ ant
+```
+
+Locate your resource pack and extract it. Here's a magic command to do it (make sure to run it from within your `MapRend` folder). Replace the two `1.8.1` folders with whatever your version of Minecraft is.
+
+```sh-session
+$ jar xf ~/Library/Application\ Support/minecraft/versions/1.8.1/1.8.1.jar assets/minecraft/textures/blocks && mv assets/minecraft/textures/blocks raw && rm -rf assets
+```
+
+Generate your `colors.json`:
+
+```sh-session
+$ java -jar MapRend.jar textures . .
+```
+
+Make a folder to put all your images in:
+
+```sh-session
+$ mkdir images
+```
+
+Now, run the command to generate your map. Change `MyWorld` to whatever your world name is.
+
+```sh-session
+$ java -jar MapRend.jar map ~/Library/Application\ Support/minecraft/saves/MyWorld . images
+$ open images
+```
+
+Finder will pop up and you should see your map!
+
+**Contributed by [Jamon Holmgren](https://github.com/jamonholmgren)**
+
+
 #### Reference
 
 MapRend uses Code by MojangAB for reading NBT files. (https://mojang.com)
