@@ -72,6 +72,11 @@ Finder will pop up and you should see your map!
 
 **Contributed by [Jamon Holmgren](https://github.com/jamonholmgren)**
 
+#### Frontends
+
+Frontends for easier use are found in `frontends`. Currently there are:
+
+* A graphical MapRend frontend for Mac OS X, contributed by **[Cameron Nichols](cameron.nichols@me.com)**
 
 #### Reference
 
