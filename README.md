@@ -76,7 +76,7 @@ Finder will pop up and you should see your map!
 
 Frontends for easier use are found in `frontends`. Currently there are:
 
-* A graphical MapRend frontend for Mac OS X, contributed by **[Cameron Nichols](cameron.nichols@me.com)**
+* A graphical MapRend frontend for Mac OS X, contributed by **[Cameron Nichols](mailto:cameron.nichols@me.com)** To use it, [download the repository](https://github.com/YSelfTool/MapRend/archive/master.zip) and install `frontends/MapRend.app.zip`.
 
 #### Reference
 
