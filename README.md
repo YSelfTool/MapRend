@@ -80,6 +80,6 @@ Frontends for easier use are found in `frontends`. Currently there are:
 
 #### Reference
 
-MapRend uses Code by MojangAB for reading NBT files. (https://mojang.com)
-MapRend uses Code by Douglas Crockford for reading and writing JSON files. (https://github.com/douglascrockford) 
+MapRend uses Code by [MojangAB](https://mojang.com) for reading NBT files.
+MapRend uses Code by [Douglas Crockford](https://github.com/douglascrockford) for reading and writing JSON files. 
  
