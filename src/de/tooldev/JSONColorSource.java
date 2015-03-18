@@ -138,6 +138,11 @@ public class JSONColorSource implements ColorSource {
         ColorF color;
         try {
             color = biomColors[biome];
+            if (color == null) {
+                System.out.println("Null biome: " + biome + ", copying default: 1.");
+                biomColors[biome] = biomColors[1];
+                color = biomColors[1];
+            }            
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("Invalid biome: " + biome + ", using default.");
             color = biomColors[1];
