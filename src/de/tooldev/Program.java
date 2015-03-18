@@ -32,6 +32,7 @@ public class Program {
 	public static Map<String, Long> clusterLastEdited = new HashMap<String, Long>();
 	public static int regionsUpdated = 0;
 	public static int regionsAmount = 0;
+    public static boolean reusingImage = false;
 	
 	public static void main(String[] args) throws IOException {
 		if(args.length >= 1) {
@@ -374,7 +375,10 @@ public class Program {
         	Region region = loadRegion(regionFile);
         	
         	Long lastEdited = clusterLastEdited.get(regionFile.getName());
-        	if (lastEdited != null && lastEdited == region.regionFile.lastModified()) continue;
+            
+        	if (lastEdited != null && lastEdited == region.regionFile.lastModified() && reusingImage) {
+                continue;
+            }
         	
         	clusterLastEdited.put(regionFile.getName(), region.regionFile.lastModified());
         	regionsUpdated++;
@@ -479,10 +483,14 @@ public class Program {
 	private static int getClusterInnerCoord(int c) {
 		return (c % clusterSize) * chunkSize;
 	}
+    
+    private static String imageFileName() {
+        return worldName + "-" + (renderNight ? "night" : "day") + ".png";
+    }
 	
 	public static void saveImage(BufferedImage image) {
 	    try {
-	    	File outputfile = new File(outputFolder, worldName + "-" + (renderNight ? "night" : "day") + ".png");
+	    	File outputfile = new File(outputFolder, imageFileName());
 			ImageIO.write(image, "png", outputfile);
 			System.out.println("Successfully written image to " + outputfile.getCanonicalPath());
 		} catch (Exception e) {
@@ -503,6 +511,23 @@ public class Program {
 	} 
 	
 	public static BufferedImage createImage() {
+        File infile = new File(outputFolder, imageFileName());
+        if (infile.exists() && !infile.isDirectory()) {
+            System.out.println("ho");
+            try {
+                BufferedImage loadedImage = ImageIO.read(infile);
+                int estimatedSize = 2 * chunkRadius * 16;
+                if (loadedImage.getWidth() == estimatedSize && loadedImage.getHeight() == estimatedSize) { // type is not equal, but that does not seem to be a problem
+                    reusingImage = true;
+		            System.out.println("Reusing existing image file.");
+                    return loadedImage;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+		        System.err.println("Unable to read existing image although it seems to exist. Not reusing image, but still rendering..");
+            }
+        }
+        System.out.println("Create a new image file.");
 		return new BufferedImage(2 * chunkRadius * 16, 2 * chunkRadius * 16, BufferedImage.TYPE_INT_ARGB);
 	}
 	
