@@ -93,14 +93,25 @@ public class Chunk {
 		}
 	}
 	
+	/**
+	 * Returns the top-most solid block at (x,z). Where that block is water,
+	 * the height of the block will equal the first block after all water is traversed.
+	 * 
+	 * @return a newly instanced Block object
+	 */
 	public Block getBlock(int x, int z) {
+		// starting at the top of the map and going down
 		for(int y = maxHeight - 1; y > 0; y--) {
+			// if the block reached is visible
 			if(isBlockSolid(blocks[x][y][z])) {
+				// h models the first block after all water is traversed 
 				int h = y;
 				if(blocks[x][y][z] == 8 || blocks[x][y][z] == 9) {
 					for(; h > 0 && (blocks[x][h][z] == 8 || blocks[x][h][z] == 9); h--);
 				}
-				return new Block(blocks[x][y][z], metadata[x][y][z], h, skyLight[x][(y < maxHeight-1?y+1:y)][z], blockLight[x][(y < maxHeight-1?y+1:y)][z], biome[x][z]);
+		                // cy models the block above y, if not top of the map
+				int cy = (y < maxHeight-1 ? y+1 : y);
+				return new Block(blocks[x][y][z], metadata[x][y][z], h, skyLight[x][cy][z], blockLight[x][cy][z], biome[x][z]);
 			}
 		}
 		return new Block(0, 0, 0, 0, 0, 0);
