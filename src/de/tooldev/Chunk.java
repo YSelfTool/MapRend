@@ -107,7 +107,12 @@ public class Chunk {
 	}
 	
 	private boolean isBlockSolid(int block) {
-		return Program.blockVisibility[block];
+		try {	
+			return Program.blockVisibility[block];
+        	} catch (ArrayIndexOutOfBoundsException aioobe) {
+        		//XXX assumes that block is invisible if not listed
+            		return false;
+        	}
 	}
 	
 	public int getX() {
