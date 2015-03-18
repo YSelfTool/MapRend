@@ -252,7 +252,7 @@ public class Program {
 		JSONObject editedJSON = null;
 		
 		try {
-			File jsonFile = new File(jsonOutputFolder, "updates.json");
+			File jsonFile = new File(jsonOutputFolder,  imageFileName() + "-updates.json");
 			if (!jsonFile.exists()) return;
 			
 			FileInputStream fileInputStream = new FileInputStream(jsonFile);
@@ -284,7 +284,7 @@ public class Program {
 		}
 	    
 		try {
-			File outputFile = new File(jsonOutputFolder, "updates.json");
+			File outputFile = new File(jsonOutputFolder, imageFileName() + "-updates.json");
 			FileWriter writer = new FileWriter(outputFile);
 			editedJSON.write(writer);
 			
@@ -485,12 +485,12 @@ public class Program {
 	}
     
     private static String imageFileName() {
-        return worldName + "-" + (renderNight ? "night" : "day") + ".png";
+        return worldName + "-" + (renderNight ? "night" : "day");
     }
 	
 	public static void saveImage(BufferedImage image) {
 	    try {
-	    	File outputfile = new File(outputFolder, imageFileName());
+	    	File outputfile = new File(outputFolder, imageFileName() + ".png");
 			ImageIO.write(image, "png", outputfile);
 			System.out.println("Successfully written image to " + outputfile.getCanonicalPath());
 		} catch (Exception e) {
@@ -511,7 +511,7 @@ public class Program {
 	} 
 	
 	public static BufferedImage createImage() {
-        File infile = new File(outputFolder, imageFileName());
+        File infile = new File(outputFolder, imageFileName() + ".png");
         if (infile.exists() && !infile.isDirectory()) {
             System.out.println("ho");
             try {
